@@ -1,4 +1,4 @@
-from scapy.all import sniff, conf, IP, TCP, DNSRR, DNSQR, DNS, sr1
+from scapy.all import sniff, conf, IP, TCP, DNS, DNSRR, DNSQR, sr1
 from datetime import datetime
 import sqlite3
 import time
@@ -47,7 +47,7 @@ if not local_ip:
     print("Could not determine local IP address. Exiting...")
     exit(1)
 
-monitored_ips = {local_ip, '192.168.137.130', '192.168.137.131', '192.168.0.1'}
+monitored_ips = {local_ip, '192.168.137.130', '192.168.137.131', '152.59.89.93', '192.168.0.1'}
 
 def get_blocked_domains():
     c.execute('SELECT domain FROM blocked_websites')
@@ -59,6 +59,7 @@ def get_allowed_domains():
 
 def get_domain(ip):
     try:
+        # Reverse DNS lookup
         domain = socket.gethostbyaddr(ip)[0]
         print(f"Resolved domain for {ip}: {domain}")
         return domain
@@ -77,7 +78,9 @@ def packet_callback(packet):
                 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
                 flagged = 0
-                if domain in blocked_domains:
+                blocked_domains = get_blocked_domains()
+                allowed_domains = get_allowed_domains()
+                if any(bd in domain for bd in blocked_domains):
                     flagged = 1
                 elif domain not in allowed_domains:
                     flagged = 2
@@ -92,9 +95,6 @@ def packet_callback(packet):
 
 conf.filter = "ip and (tcp port 80 or tcp port 443)"
 
-allowed_domains = get_allowed_domains()
-blocked_domains = get_blocked_domains()
-
 while True:
     try:
         sniff(prn=packet_callback, store=0)
@@ -103,5 +103,4 @@ while True:
 
 print("Exiting...")
 
-# Close the database connection
 conn.close()
