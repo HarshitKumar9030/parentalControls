@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parental Monitoring System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Parental Monitoring System</h1>
+        </header>
+        <main>
+            <section id="traffic-data">
+                <h2>Monitored Traffic Data</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source IP</th>
+                            <th>Destination IP</th>
+                            <th>Domain</th>
+                            <th>Timestamp</th>
+                            <th>Flagged</th>
+                        </tr>
+                    </thead>
+                    <tbody id="traffic-table">
+                    </tbody>
+                </table>
+            </section>
+            <section id="website-management">
+                <h2>Website Management</h2>
+                <div>
+                    <h3>Allowed Websites</h3>
+                    <input type="text" id="allowed-website-input" placeholder="Add allowed website">
+                    <button onclick="addAllowedWebsite()">Add</button>
+                    <ul id="allowed-websites-list">
+                    </ul>
+                </div>
+                <div>
+                    <h3>Blocked Websites</h3>
+                    <input type="text" id="blocked-website-input" placeholder="Add blocked website">
+                    <button onclick="addBlockedWebsite()">Add</button>
+                    <ul id="blocked-websites-list">
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
